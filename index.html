@@ -5,69 +5,1557 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voyager - Premium Travel Experiences</title>
     
-    <!-- CSS -->
-    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
-    <link href="css/animations.css" rel="stylesheet">
-    <link href="css/styles.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-reverse': 'float-reverse 8s ease-in-out infinite',
+                        'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'wave': 'wave 1.5s linear infinite',
+                        'tilt': 'tilt 10s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        'float-reverse': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(20px)' },
+                        },
+                        wave: {
+                            '0%': { transform: 'rotate(0deg)' },
+                            '10%': { transform: 'rotate(14deg)' },
+                            '20%': { transform: 'rotate(-8deg)' },
+                            '30%': { transform: 'rotate(14deg)' },
+                            '40%': { transform: 'rotate(-4deg)' },
+                            '50%': { transform: 'rotate(10deg)' },
+                            '60%': { transform: 'rotate(0deg)' },
+                            '100%': { transform: 'rotate(0deg)' },
+                        },
+                        tilt: {
+                            '0%, 100%': { transform: 'rotate(-1deg)' },
+                            '50%': { transform: 'rotate(1deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     
-    <!-- Fonts & Icons -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Animation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollToPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/MotionPathPlugin.min.js"></script>
+    
+    <!-- UI Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Mapbox -->
+    <!-- Mapbox GL JS -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+    
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            --color-primary: #3B82F6;
+            --color-primary-dark: #2563EB;
+            --color-secondary: #F59E0B;
+            --color-accent: #10B981;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        /* Advanced 3D Card Effect */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+            transform: perspective(1000px) rotateY(0) rotateX(0) scale(1);
+        }
+        
+        .card-3d:hover {
+            transform: perspective(1000px) rotateY(5deg) rotateX(5deg) scale(1.03);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Gradient Border Effect */
+        .gradient-border {
+            position: relative;
+            background-clip: padding-box;
+            border: 2px solid transparent;
+            border-radius: 1rem;
+        }
+        
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: -1;
+            margin: -2px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+        }
+        
+        /* Floating Elements */
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-element-2 {
+            animation: float-reverse 8s ease-in-out infinite;
+        }
+        
+        /* Advanced Button Effects */
+        .btn-magnetic {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+        
+        .btn-magnetic:hover {
+            transform: translateY(-3px);
+        }
+        
+        .btn-magnetic::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%, -50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn-magnetic:hover::before {
+            animation: pulse 1s ease-out;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary-dark);
+        }
+        
+        /* Text Gradient */
+        .text-gradient {
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* Advanced Loader Animation */
+        @keyframes custom-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid rgba(59, 130, 246, 0.2);
+            border-bottom-color: var(--color-primary);
+            border-radius: 50%;
+            display: inline-block;
+            animation: custom-spin 1s linear infinite;
+        }
+        
+        /* Morphing Background */
+        .morphing-bg {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .morphing-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+            animation: morph 16s ease-in-out infinite;
+            border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%;
+            z-index: -1;
+        }
+        
+        @keyframes morph {
+            0% { border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%; }
+            50% { border-radius: 70% 30% 30% 70% / 40% 60% 40% 60%; }
+            100% { border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%; }
+        }
+        
+        /* Hover Underline Animation */
+        .hover-underline {
+            position: relative;
+        }
+        
+        .hover-underline::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: currentColor;
+            transition: width 0.3s ease;
+        }
+        
+        .hover-underline:hover::after {
+            width: 100%;
+        }
+        
+        /* Advanced Input Focus Effect */
+        .input-focus-effect:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            border-color: var(--color-primary);
+        }
+        
+        /* Parallax Effect */
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        /* Glow Effect */
+        .glow {
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+        }
+        
+        /* Custom Checkbox */
+        .custom-checkbox input:checked + span {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+        
+        .custom-checkbox input:checked + span::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
 </head>
 <body class="bg-gray-50 antialiased">
     <!-- Preloader -->
-     <div id="preloader" class="fixed inset-0 bg-white z-50 flex items-center justify-center transition-opacity duration-500">
+    <div id="preloader" class="fixed inset-0 bg-white z-50 flex items-center justify-center transition-opacity duration-500">
         <div class="loader"></div>
     </div>
+
+    <!-- Cursor Follower -->
+    <div id="cursor-follower" class="fixed w-8 h-8 rounded-full bg-blue-100/30 pointer-events-none z-50 transform -translate-x-1/2 -translate-y-1/2 mix-blend-multiply"></div>
     
-    <!-- Header -->
-    <header id="header"></header>
+    <!-- Scroll Progress Indicator -->
+    <div id="scroll-progress" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-emerald-500 z-50" style="width: 0%"></div>
     
-    <!-- Hero Section -->
-    <section id="hero"></section>
-    
-    <!-- Destinations Section -->
-    <section id="destinations"></section>
-    
-    <!-- Experiences Section -->
-    <section id="experiences"></section>
-    
-    <!-- Testimonials Section -->
-    <section id="testimonials"></section>
-    
-    <!-- Map Section -->
-    <section id="map"></section>
-    
-    <!-- CTA Section -->
-    <section id="cta"></section>
-    
-    <!-- FAQ Section -->
-    <section id="faq"></section>
-    
+    <!-- Header Section -->
+    <header class="fixed w-full z-40 bg-white/90 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo with Animation -->
+                <div class="flex items-center group">
+                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl mr-2 transition-all duration-300 group-hover:rotate-12">
+                        <span class="group-hover:animate-wave">V</span>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800 hover:text-blue-600 transition">Voyager</span>
+                </div>
+                
+                <!-- Navigation Menu with Magnetic Effect -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-800 hover:text-blue-600 font-medium transition hover-underline">Home</a>
+                    <a href="#destinations" class="text-gray-800 hover:text-blue-600 font-medium transition hover-underline">Destinations</a>
+                    <a href="#experiences" class="text-gray-800 hover:text-blue-600 font-medium transition hover-underline">Experiences</a>
+                    <a href="#testimonials" class="text-gray-800 hover:text-blue-600 font-medium transition hover-underline">Stories</a>
+                    <a href="#contact" class="text-gray-800 hover:text-blue-600 font-medium transition hover-underline">Contact</a>
+                </nav>
+                
+                <!-- Mobile Menu Button with Animation -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-800 focus:outline-none relative group">
+                    <div class="w-6 h-6 flex flex-col justify-between">
+                        <span class="block w-full h-0.5 bg-gray-800 group-hover:bg-blue-600 transition-all duration-300 transform origin-left group-hover:rotate-45 group-hover:w-6"></span>
+                        <span class="block w-4 h-0.5 bg-gray-800 group-hover:bg-blue-600 transition-all duration-300 ml-auto group-hover:opacity-0"></span>
+                        <span class="block w-full h-0.5 bg-gray-800 group-hover:bg-blue-600 transition-all duration-300 transform origin-left group-hover:-rotate-45 group-hover:w-6"></span>
+                    </div>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu with Slide Animation -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 origin-top">
+                <div class="flex flex-col space-y-3">
+                    <a href="#home" class="text-gray-800 hover:text-blue-600 font-medium transition hover-underline py-2">Home</a>
+                    <a href="#destinations" class="text-gray-800 hover:text-blue-600 font-medium transition hover-underline py-2">Destinations</a>
+                    <a href="#experiences" class="text-gray-800 hover:text-blue-600 font-medium transition hover-underline py-2">Experiences</a>
+                    <a href="#testimonials" class="text-gray-800 hover:text-blue-600 font-medium transition hover-underline py-2">Stories</a>
+                    <a href="#contact" class="text-gray-800 hover:text-blue-600 font-medium transition hover-underline py-2">Contact</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section with Parallax and Morphing Background -->
+    <section id="home" class="pt-32 pb-20 px-6 relative overflow-hidden morphing-bg">
+        <!-- Floating decorative elements -->
+        <div class="absolute top-20 left-10 w-16 h-16 bg-blue-200 rounded-full opacity-20 floating-element"></div>
+        <div class="absolute bottom-1/4 right-20 w-24 h-24 bg-yellow-200 rounded-full opacity-20 floating-element-2"></div>
+        <div class="absolute top-1/3 right-1/4 w-12 h-12 bg-emerald-200 rounded-full opacity-20 floating-element"></div>
+        
+        <div class="container mx-auto flex flex-col lg:flex-row items-center relative z-10">
+            <!-- Hero Content with Typing Animation -->
+            <div class="lg:w-1/2 mb-12 lg:mb-0" data-aos="fade-right" data-aos-duration="800">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                    Discover <span class="text-gradient">Beautiful</span> Places <br>
+                    <span id="typing-text" class="inline-block"></span>
+                </h1>
+                <p class="text-lg text-gray-600 mb-8 max-w-lg animate__animated animate__fadeIn">
+                    Explore breathtaking destinations, experience unique cultures, and create memories that last a lifetime with our expertly curated travel experiences.
+                </p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#destinations" class="btn-magnetic bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium text-center transition-all duration-300 shadow-lg hover:shadow-xl">
+                        Explore Destinations
+                    </a>
+                    <a href="#contact" class="btn-magnetic border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-lg font-medium text-center transition-all duration-300">
+                        <i class="fas fa-play mr-2"></i> Watch Video
+                    </a>
+                </div>
+                
+                <!-- Stats with Counter Animation -->
+                <div class="flex flex-wrap mt-12 gap-6">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-blue-600 mb-2 count-up" data-count="150">0</div>
+                        <div class="text-gray-600">Destinations</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-blue-600 mb-2 count-up" data-count="5000">0</div>
+                        <div class="text-gray-600">Happy Travelers</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-blue-600 mb-2 count-up" data-count="12">0</div>
+                        <div class="text-gray-600">Years Experience</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Image with 3D Tilt Effect -->
+            <div class="lg:w-1/2 relative" data-aos="fade-left" data-aos-duration="800">
+                <div class="card-3d rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="relative rounded-2xl overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1286&q=80" 
+                             alt="Travel Destination" 
+                             class="w-full h-auto rounded-2xl object-cover transition-transform duration-500 hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-white/30"></div>
+                    </div>
+                    
+                    <!-- Floating Badge with Animation -->
+                    <div class="absolute -top-5 -right-5 bg-gradient-to-r from-blue-600 to-emerald-500 text-white px-4 py-2 rounded-full shadow-lg animate__animated animate__pulse animate__infinite">
+                        <i class="fas fa-award mr-2"></i> Best 2023
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll down indicator with animation -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#destinations" class="text-gray-600 hover:text-blue-600 transition">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Destinations Section with Advanced Grid Animation -->
+    <section id="destinations" class="py-20 px-6 bg-white">
+        <div class="container mx-auto">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Popular Destinations</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Explore our handpicked selection of the world's most breathtaking destinations.
+                </p>
+            </div>
+            
+            <!-- Filter Tabs with Animation -->
+            <div class="flex justify-center mb-12 overflow-x-auto">
+                <div class="inline-flex rounded-full bg-gray-100 p-1" data-aos="fade-up" data-aos-delay="100">
+                    <button class="filter-btn px-6 py-2 rounded-full font-medium transition-all duration-300 active" data-filter="all">All</button>
+                    <button class="filter-btn px-6 py-2 rounded-full font-medium transition-all duration-300" data-filter="europe">Europe</button>
+                    <button class="filter-btn px-6 py-2 rounded-full font-medium transition-all duration-300" data-filter="asia">Asia</button>
+                    <button class="filter-btn px-6 py-2 rounded-full font-medium transition-all duration-300" data-filter="america">America</button>
+                    <button class="filter-btn px-6 py-2 rounded-full font-medium transition-all duration-300" data-filter="africa">Africa</button>
+                </div>
+            </div>
+            
+            <!-- Destinations Grid with Masonry Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="destinations-grid">
+                <!-- Destination Card 1 -->
+                <div class="destination-item" data-category="europe" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="card-3d bg-white rounded-2xl overflow-hidden shadow-lg h-full flex flex-col">
+                        <div class="relative overflow-hidden h-64">
+                            <img src="https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80" 
+                                 alt="Santorini, Greece" 
+                                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-bold">Santorini</h3>
+                                <p class="text-sm">Greece</p>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-medium">Europe</span>
+                            </div>
+                        </div>
+                        <div class="p-6 flex-grow">
+                            <p class="text-gray-600 mb-4">
+                                Famous for its dramatic views, stunning sunsets, and white-washed houses with blue domes.
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-blue-600 font-bold">$1,299+</span>
+                                <button class="text-blue-600 hover:text-blue-800 font-medium transition group">
+                                    View Details <i class="fas fa-arrow-right ml-1 group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Destination Card 2 -->
+                <div class="destination-item" data-category="asia" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="card-3d bg-white rounded-2xl overflow-hidden shadow-lg h-full flex flex-col">
+                        <div class="relative overflow-hidden h-64">
+                            <img src="https://images.unsplash.com/photo-1538970272646-f61fabb3be8a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80" 
+                                 alt="Kyoto, Japan" 
+                                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-bold">Kyoto</h3>
+                                <p class="text-sm">Japan</p>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-medium">Asia</span>
+                            </div>
+                        </div>
+                        <div class="p-6 flex-grow">
+                            <p class="text-gray-600 mb-4">
+                                Known for its classical Buddhist temples, gardens, imperial palaces, and traditional wooden houses.
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-blue-600 font-bold">$1,899+</span>
+                                <button class="text-blue-600 hover:text-blue-800 font-medium transition group">
+                                    View Details <i class="fas fa-arrow-right ml-1 group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Destination Card 3 -->
+                <div class="destination-item" data-category="america" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="card-3d bg-white rounded-2xl overflow-hidden shadow-lg h-full flex flex-col">
+                        <div class="relative overflow-hidden h-64">
+                            <img src="https://images.unsplash.com/photo-1518391846015-55a9cc003b25?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                                 alt="Machu Picchu, Peru" 
+                                 class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="text-xl font-bold">Machu Picchu</h3>
+                                <p class="text-sm">Peru</p>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-amber-600 text-white px-3 py-1 rounded-full text-xs font-medium">America</span>
+                            </div>
+                        </div>
+                        <div class="p-6 flex-grow">
+                            <p class="text-gray-600 mb-4">
+                                An ancient Incan city set high in the Andes Mountains, renowned for its sophisticated dry-stone walls.
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-blue-600 font-bold">$1,599+</span>
+                                <button class="text-blue-600 hover:text-blue-800 font-medium transition group">
+                                    View Details <i class="fas fa-arrow-right ml-1 group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- More destination cards would go here -->
+            </div>
+            
+            <!-- View More Button with Animation -->
+            <div class="text-center mt-12" data-aos="fade-up" data-aos-delay="400">
+                <a href="#" class="btn-magnetic inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl">
+                    View All Destinations
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experiences Section with Horizontal Scroll -->
+    <section id="experiences" class="py-20 px-6 bg-gray-50">
+        <div class="container mx-auto">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Unique Experiences</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Go beyond typical tourism with our specially curated travel experiences.
+                </p>
+            </div>
+            
+            <!-- Horizontal Scrolling Cards -->
+            <div class="relative">
+                <div class="flex overflow-x-auto pb-8 scrollbar-hide" id="experience-scroll">
+                    <div class="flex space-x-8">
+                        <!-- Experience Card 1 -->
+                        <div class="flex-shrink-0 w-80" data-aos="flip-left">
+                            <div class="card-3d bg-white rounded-2xl overflow-hidden shadow-lg h-full">
+                                <div class="relative h-48">
+                                    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                                         alt="Cultural Immersion" 
+                                         class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                                    <div class="absolute top-4 left-4">
+                                        <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-medium">Cultural</span>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Cultural Immersion</h3>
+                                    <p class="text-gray-600 mb-4 text-sm">
+                                        Live like a local with authentic homestays, cooking classes, and traditional ceremonies.
+                                    </p>
+                                    <div class="flex items-center text-sm text-gray-500">
+                                        <i class="fas fa-clock mr-2"></i> 5-14 days
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Experience Card 2 -->
+                        <div class="flex-shrink-0 w-80" data-aos="flip-left" data-aos-delay="100">
+                            <div class="card-3d bg-white rounded-2xl overflow-hidden shadow-lg h-full">
+                                <div class="relative h-48">
+                                    <img src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                                         alt="Adventure Trekking" 
+                                         class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                                    <div class="absolute top-4 left-4">
+                                        <span class="bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-medium">Adventure</span>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Adventure Trekking</h3>
+                                    <p class="text-gray-600 mb-4 text-sm">
+                                        Challenge yourself with guided treks through some of the world's most stunning landscapes.
+                                    </p>
+                                    <div class="flex items-center text-sm text-gray-500">
+                                        <i class="fas fa-clock mr-2"></i> 3-10 days
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Experience Card 3 -->
+                        <div class="flex-shrink-0 w-80" data-aos="flip-left" data-aos-delay="200">
+                            <div class="card-3d bg-white rounded-2xl overflow-hidden shadow-lg h-full">
+                                <div class="relative h-48">
+                                    <img src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                                         alt="Wildlife Safari" 
+                                         class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                                    <div class="absolute top-4 left-4">
+                                        <span class="bg-amber-600 text-white px-3 py-1 rounded-full text-xs font-medium">Wildlife</span>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Wildlife Safari</h3>
+                                    <p class="text-gray-600 mb-4 text-sm">
+                                        Get up close with nature's most magnificent creatures in their natural habitats.
+                                    </p>
+                                    <div class="flex items-center text-sm text-gray-500">
+                                        <i class="fas fa-clock mr-2"></i> 4-12 days
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Experience Card 4 -->
+                        <div class="flex-shrink-0 w-80" data-aos="flip-left" data-aos-delay="300">
+                            <div class="card-3d bg-white rounded-2xl overflow-hidden shadow-lg h-full">
+                                <div class="relative h-48">
+                                    <img src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1473&q=80" 
+                                         alt="Luxury Retreat" 
+                                         class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                                    <div class="absolute top-4 left-4">
+                                        <span class="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium">Luxury</span>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Luxury Retreat</h3>
+                                    <p class="text-gray-600 mb-4 text-sm">
+                                        Indulge in world-class accommodations, private tours, and exclusive experiences.
+                                    </p>
+                                    <div class="flex items-center text-sm text-gray-500">
+                                        <i class="fas fa-clock mr-2"></i> 7-14 days
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Scroll Indicators -->
+                <button class="experience-scroll-left absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg z-10 hover:bg-gray-100 transition">
+                    <i class="fas fa-chevron-left text-gray-700"></i>
+                </button>
+                <button class="experience-scroll-right absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg z-10 hover:bg-gray-100 transition">
+                    <i class="fas fa-chevron-right text-gray-700"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section with Advanced Carousel -->
+    <section id="testimonials" class="py-20 px-6 bg-white">
+        <div class="container mx-auto">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Traveler Stories</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Hear what our travelers have to say about their experiences with Voyager.
+                </p>
+            </div>
+            
+            <!-- Testimonial Carousel -->
+            <div class="relative">
+                <div class="testimonial-carousel overflow-hidden">
+                    <div class="flex transition-transform duration-500 ease-in-out">
+                        <!-- Testimonial 1 -->
+                        <div class="flex-shrink-0 w-full">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <div class="testimonial-card bg-gray-50 rounded-2xl p-8 shadow-md transition-all duration-300 hover:shadow-lg" data-aos="fade-up">
+                                    <div class="flex items-center mb-6">
+                                        <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Sarah Johnson" class="w-12 h-12 rounded-full object-cover mr-4">
+                                        <div>
+                                            <h4 class="font-bold text-gray-900">Sarah Johnson</h4>
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-600 italic mb-6">
+                                        "The trip to Santorini was absolutely magical! Voyager took care of every detail, from the perfect hotel to amazing local experiences. I'll definitely travel with them again."
+                                    </p>
+                                    <div class="text-sm text-gray-500">
+                                        <i class="fas fa-map-marker-alt mr-2"></i> Santorini, Greece
+                                    </div>
+                                </div>
+                                
+                                <!-- Testimonial 2 -->
+                                <div class="testimonial-card bg-gray-50 rounded-2xl p-8 shadow-md transition-all duration-300 hover:shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                                    <div class="flex items-center mb-6">
+                                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen" class="w-12 h-12 rounded-full object-cover mr-4">
+                                        <div>
+                                            <h4 class="font-bold text-gray-900">Michael Chen</h4>
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star-half-alt"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-600 italic mb-6">
+                                        "Kyoto was everything I hoped for and more. The cultural immersion activities arranged by Voyager gave me a deep appreciation for Japanese traditions."
+                                    </p>
+                                    <div class="text-sm text-gray-500">
+                                        <i class="fas fa-map-marker-alt mr-2"></i> Kyoto, Japan
+                                    </div>
+                                </div>
+                                
+                                <!-- Testimonial 3 -->
+                                <div class="testimonial-card bg-gray-50 rounded-2xl p-8 shadow-md transition-all duration-300 hover:shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                                    <div class="flex items-center mb-6">
+                                        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Emma Rodriguez" class="w-12 h-12 rounded-full object-cover mr-4">
+                                        <div>
+                                            <h4 class="font-bold text-gray-900">Emma Rodriguez</h4>
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-600 italic mb-6">
+                                        "Machu Picchu was a dream come true! The guides were knowledgeable, the accommodations were perfect, and the entire experience was seamless. Highly recommend!"
+                                    </p>
+                                    <div class="text-sm text-gray-500">
+                                        <i class="fas fa-map-marker-alt mr-2"></i> Machu Picchu, Peru
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Additional testimonial slides would go here -->
+                    </div>
+                </div>
+                
+                <!-- Carousel Controls -->
+                <div class="flex justify-center mt-8 space-x-4">
+                    <button class="testimonial-prev bg-gray-200 hover:bg-gray-300 w-10 h-10 rounded-full flex items-center justify-center transition hover:scale-110">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="flex space-x-2">
+                        <button class="testimonial-dot w-3 h-3 rounded-full bg-gray-300 active"></button>
+                        <button class="testimonial-dot w-3 h-3 rounded-full bg-gray-300"></button>
+                        <button class="testimonial-dot w-3 h-3 rounded-full bg-gray-300"></button>
+                    </div>
+                    <button class="testimonial-next bg-gray-200 hover:bg-gray-300 w-10 h-10 rounded-full flex items-center justify-center transition hover:scale-110">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Map Section -->
+    <section class="py-20 px-6 bg-gray-50">
+        <div class="container mx-auto">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Explore Our Destinations</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Click on the map markers to discover more about each location.
+                </p>
+            </div>
+            
+            <div class="map-container shadow-2xl overflow-hidden relative" data-aos="zoom-in">
+                <div id="travel-map" class="w-full h-full"></div>
+                <div class="absolute top-4 right-4 bg-white rounded-lg shadow-md p-2 z-10">
+                    <button class="map-zoom-in px-3 py-1 hover:bg-gray-100 rounded"><i class="fas fa-plus"></i></button>
+                    <button class="map-zoom-out px-3 py-1 hover:bg-gray-100 rounded"><i class="fas fa-minus"></i></button>
+                </div>
+            </div>
+            
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6" id="map-info-container">
+                <!-- Map info will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section with Gradient Background -->
+    <section class="py-16 px-6 bg-gradient-to-r from-blue-600 to-emerald-500 text-white">
+        <div class="container mx-auto max-w-4xl text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6" data-aos="fade-up">Ready for Your Next Adventure?</h2>
+            <p class="text-lg mb-8" data-aos="fade-up" data-aos-delay="100">
+                Let us help you plan the perfect getaway tailored to your preferences.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                <a href="#contact" class="btn-magnetic bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl">
+                    Get Started
+                </a>
+                <a href="tel:+15551234567" class="btn-magnetic border-2 border-white text-white hover:bg-white/10 px-8 py-3 rounded-lg font-medium transition-all duration-300">
+                    <i class="fas fa-phone mr-2"></i> Call Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section with Animated Accordion -->
+    <section class="py-20 px-6 bg-white">
+        <div class="container mx-auto max-w-4xl">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Find answers to common questions about our travel services.
+                </p>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item border border-gray-200 rounded-lg overflow-hidden" data-aos="fade-up">
+                    <button class="faq-question w-full text-left px-6 py-4 bg-gray-50 hover:bg-gray-100 transition flex justify-between items-center">
+                        <span class="font-medium text-gray-900">How do I book a trip with Voyager?</span>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer px-6 py-4 bg-white hidden">
+                        <p class="text-gray-600">
+                            Booking with Voyager is simple! You can browse our destinations online, then either book directly through our website or contact our travel specialists who will help customize your perfect itinerary. We offer 24/7 support throughout your booking process.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="faq-item border border-gray-200 rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <button class="faq-question w-full text-left px-6 py-4 bg-gray-50 hover:bg-gray-100 transition flex justify-between items-center">
+                        <span class="font-medium text-gray-900">What's included in your travel packages?</span>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer px-6 py-4 bg-white hidden">
+                        <p class="text-gray-600">
+                            Our packages typically include accommodations, transportation between destinations, guided tours, and some meals. Each package is different, so we provide detailed itineraries with clear inclusions. Optional add-ons are available for more personalized experiences.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 3 -->
+                <div class="faq-item border border-gray-200 rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                    <button class="faq-question w-full text-left px-6 py-4 bg-gray-50 hover:bg-gray-100 transition flex justify-between items-center">
+                        <span class="font-medium text-gray-900">Can I customize my travel itinerary?</span>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer px-6 py-4 bg-white hidden">
+                        <p class="text-gray-600">
+                            Absolutely! We specialize in customized travel experiences. Our specialists will work with you to create an itinerary that matches your interests, budget, and travel style. From luxury upgrades to off-the-beaten-path adventures, we'll tailor every detail.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="faq-item border border-gray-200 rounded-lg overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                    <button class="faq-question w-full text-left px-6 py-4 bg-gray-50 hover:bg-gray-100 transition flex justify-between items-center">
+                        <span class="font-medium text-gray-900">What safety measures do you have in place?</span>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer px-6 py-4 bg-white hidden">
+                        <p class="text-gray-600">
+                            Your safety is our top priority. We carefully vet all partners, provide 24/7 emergency support, stay updated on travel advisories, and offer comprehensive travel insurance options. Our guides are trained in first aid and local safety protocols.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
-    <section id="contact"></section>
-    
+    <section id="contact" class="py-20 px-6 bg-gray-50">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact Info -->
+                <div data-aos="fade-right">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Get in Touch</h2>
+                    <p class="text-gray-600 mb-8">
+                        Have questions or ready to start planning your next adventure? Our travel specialists are here to help.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-map-marker-alt text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-1">Our Office</h4>
+                                <p class="text-gray-600">123 Travel Street, Adventure City, AC 12345</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-phone-alt text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-1">Call Us</h4>
+                                <p class="text-gray-600">+1 (555) 123-4567</p>
+                                <p class="text-sm text-gray-500">Mon-Fri: 9am-6pm (EST)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-envelope text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-1">Email Us</h4>
+                                <p class="text-gray-600">info@voyager.com</p>
+                                <p class="text-sm text-gray-500">We typically reply within 24 hours</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <h4 class="font-bold text-gray-900 mb-4">Follow Us</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="social-icon w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="social-icon w-10 h-10 rounded-full bg-blue-400 text-white flex items-center justify-center hover:bg-blue-500 transition">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-icon w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white flex items-center justify-center hover:from-purple-700 hover:to-pink-700 transition">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="social-icon w-10 h-10 rounded-full bg-blue-700 text-white flex items-center justify-center hover:bg-blue-800 transition">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <div data-aos="fade-left">
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">Send Us a Message</h3>
+                        <form id="contact-form" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                    <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent input-focus-effect">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent input-focus-effect">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                                <input type="text" id="subject" name="subject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent input-focus-effect">
+                            </div>
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                                <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent input-focus-effect"></textarea>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="custom-checkbox flex items-center mr-3">
+                                    <input type="checkbox" id="newsletter" name="newsletter" class="opacity-0 absolute h-5 w-5">
+                                    <span class="bg-white border-2 border-gray-300 rounded w-5 h-5 flex flex-shrink-0 justify-center items-center mr-2"></span>
+                                    <label for="newsletter" class="text-sm text-gray-600">Subscribe to newsletter</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-magnetic w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
-    <footer id="footer"></footer>
-    
+    <footer class="bg-gray-900 text-gray-300 py-16 px-6">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl mr-2">V</div>
+                        <span class="text-xl font-bold text-white">Voyager</span>
+                    </div>
+                    <p class="mb-4">
+                        Creating unforgettable travel experiences since 2010. We specialize in curated journeys that connect you with the world's most beautiful places.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="social-icon w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-blue-600 transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-icon w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-blue-400 transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-blue-700 transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="hover:text-white transition hover-underline">Home</a></li>
+                        <li><a href="#destinations" class="hover:text-white transition hover-underline">Destinations</a></li>
+                        <li><a href="#experiences" class="hover:text-white transition hover-underline">Experiences</a></li>
+                        <li><a href="#testimonials" class="hover:text-white transition hover-underline">Travel Stories</a></li>
+                        <li><a href="#" class="hover:text-white transition hover-underline">About Us</a></li>
+                        <li><a href="#contact" class="hover:text-white transition hover-underline">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4">Contact Info</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-blue-400"></i>
+                            <span>123 Travel Street, Adventure City, AC 12345</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3 text-blue-400"></i>
+                            <span>+1 (555) 123-4567</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 text-blue-400"></i>
+                            <span>info@voyager.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-clock mt-1 mr-3 text-blue-400"></i>
+                            <span>Mon-Fri: 9am-6pm (EST)</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4">Newsletter</h3>
+                    <p class="mb-4">
+                        Subscribe to get updates on our latest offers and travel inspiration.
+                    </p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email" 
+                               class="bg-gray-800 text-white px-4 py-2 rounded-l-lg focus:outline-none focus:ring-1 focus:ring-blue-400 w-full input-focus-effect">
+                        <button type="submit" 
+                                class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-r-lg transition btn-magnetic">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p>&copy; 2023 Voyager Travel. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition hover-underline">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition hover-underline">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition hover-underline">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <!-- Back to Top Button -->
-    <button id="back-to-top"></button>
-    
-    <!-- JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-blue-600 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 invisible transition-all duration-300 hover:bg-blue-700">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript Libraries -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
     
-    <script src="js/main.js" type="module"></script>
-    <script src="js/animations.js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/components/navigation.js"></script>
-    <script src="js/components/carousel.js"></script>
-    <script src="js/components/form.js"></script>
+    <!-- Main JavaScript -->
+    <script>
+        // Initialize AOS animation library
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: false,
+            mirror: true
+        });
+        
+        // Preloader
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            gsap.to(preloader, {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: function() {
+                    preloader.style.display = 'none';
+                }
+            });
+        });
+        
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                gsap.from(menu, {
+                    opacity: 0,
+                    scaleY: 0,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            } else {
+                gsap.to(menu, {
+                    opacity: 0,
+                    scaleY: 0,
+                    duration: 0.3,
+                    ease: 'power2.in',
+                    onComplete: function() {
+                        menu.classList.add('hidden');
+                    }
+                });
+            }
+        });
+        
+        // Typing Animation
+        const typed = new Typed('#typing-text', {
+            strings: ['Around the World', 'With Unique Experiences', 'For Unforgettable Memories'],
+            typeSpeed: 50,
+            backSpeed: 30,
+            loop: true,
+            showCursor: true,
+            cursorChar: '|',
+            smartBackspace: true
+        });
+        
+        // Counter Animation
+        const counters = document.querySelectorAll('.count-up');
+        const speed = 200;
+        
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-count');
+            const count = +counter.innerText;
+            const increment = target / speed;
+            
+            if (count < target) {
+                counter.innerText = Math.ceil(count + increment);
+                setTimeout(updateCount, 1);
+            } else {
+                counter.innerText = target;
+            }
+            
+            function updateCount() {
+                const current = +counter.innerText;
+                if (current < target) {
+                    counter.innerText = Math.ceil(current + increment);
+                    setTimeout(updateCount, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            }
+        });
+        
+        // Scroll Progress Indicator
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollProgress = (scrollTop / scrollHeight) * 100;
+            document.getElementById('scroll-progress').style.width = scrollProgress + '%';
+            
+            // Back to Top Button
+            const backToTop = document.getElementById('back-to-top');
+            if (scrollTop > 300) {
+                backToTop.style.opacity = '1';
+                backToTop.style.visibility = 'visible';
+            } else {
+                backToTop.style.opacity = '0';
+                backToTop.style.visibility = 'hidden';
+            }
+        });
+        
+        // Back to Top Button
+        document.getElementById('back-to-top').addEventListener('click', function() {
+            gsap.to(window, {
+                scrollTo: 0,
+                duration: 1,
+                ease: 'power2.inOut'
+            });
+        });
+        
+        // Cursor Follower
+        const cursorFollower = document.getElementById('cursor-follower');
+        document.addEventListener('mousemove', function(e) {
+            gsap.to(cursorFollower, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+        
+        // Magnetic Buttons
+        const magneticButtons = document.querySelectorAll('.btn-magnetic');
+        magneticButtons.forEach(button => {
+            button.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const angleX = (y - centerY) * 0.03;
+                const angleY = (centerX - x) * 0.03;
+                
+                gsap.to(this, {
+                    x: angleY * 2,
+                    y: angleX * 2,
+                    rotateX: angleX,
+                    rotateY: angleY,
+                    duration: 0.5,
+                    ease: 'power2.out'
+                });
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                gsap.to(this, {
+                    x: 0,
+                    y: 0,
+                    rotateX: 0,
+                    rotateY: 0,
+                    duration: 0.7,
+                    ease: 'elastic.out(1, 0.3)'
+                });
+            });
+        });
+        
+        // Social Icons Animation
+        const socialIcons = document.querySelectorAll('.social-icon');
+        socialIcons.forEach(icon => {
+            icon.addEventListener('mouseenter', function() {
+                gsap.to(this, {
+                    scale: 1.1,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            });
+            
+            icon.addEventListener('mouseleave', function() {
+                gsap.to(this, {
+                    scale: 1,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            });
+        });
+        
+        // FAQ Accordion
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const icon = this.querySelector('i');
+                
+                if (answer.classList.contains('hidden')) {
+                    answer.classList.remove('hidden');
+                    gsap.from(answer, {
+                        height: 0,
+                        opacity: 0,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    gsap.to(answer, {
+                        height: 0,
+                        opacity: 0,
+                        duration: 0.3,
+                        ease: 'power2.in',
+                        onComplete: function() {
+                            answer.classList.add('hidden');
+                        }
+                    });
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+        
+        // Destination Filter
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                const destinationItems = document.querySelectorAll('.destination-item');
+                
+                destinationItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        gsap.to(item, {
+                            opacity: 1,
+                            scale: 1,
+                            duration: 0.5,
+                            ease: 'power2.out',
+                            display: 'block'
+                        });
+                    } else {
+                        gsap.to(item, {
+                            opacity: 0,
+                            scale: 0.9,
+                            duration: 0.5,
+                            ease: 'power2.in',
+                            display: 'none'
+                        });
+                    }
+                });
+            });
+        });
+        
+        // Experience Horizontal Scroll
+        const experienceScroll = document.getElementById('experience-scroll');
+        const scrollLeftBtn = document.querySelector('.experience-scroll-left');
+        const scrollRightBtn = document.querySelector('.experience-scroll-right');
+        
+        scrollLeftBtn.addEventListener('click', function() {
+            gsap.to(experienceScroll, {
+                scrollLeft: experienceScroll.scrollLeft - 300,
+                duration: 0.5,
+                ease: 'power2.out'
+            });
+        });
+        
+        scrollRightBtn.addEventListener('click', function() {
+            gsap.to(experienceScroll, {
+                scrollLeft: experienceScroll.scrollLeft + 300,
+                duration: 0.5,
+                ease: 'power2.out'
+            });
+        });
+        
+        // Testimonial Carousel
+        let currentTestimonial = 0;
+        const testimonials = document.querySelectorAll('.testimonial-card');
+        const testimonialDots = document.querySelectorAll('.testimonial-dot');
+        
+        function showTestimonial(index) {
+            // Update dots
+            testimonialDots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('active');
+                    dot.classList.remove('bg-gray-300');
+                    dot.classList.add('bg-blue-600');
+                } else {
+                    dot.classList.remove('active');
+                    dot.classList.add('bg-gray-300');
+                    dot.classList.remove('bg-blue-600');
+                }
+            });
+            
+            // Animate testimonials
+            gsap.to('.testimonial-carousel .flex', {
+                x: `-${index * 100}%`,
+                duration: 0.5,
+                ease: 'power2.out'
+            });
+        }
+        
+        document.querySelector('.testimonial-prev').addEventListener('click', function() {
+            currentTestimonial = (currentTestimonial - 1 + testimonials.length / 3) % (testimonials.length / 3);
+            showTestimonial(currentTestimonial);
+        });
+        
+        document.querySelector('.testimonial-next').addEventListener('click', function() {
+            currentTestimonial = (currentTestimonial + 1) % (testimonials.length / 3);
+            showTestimonial(currentTestimonial);
+        });
+        
+        // Dot navigation
+        testimonialDots.forEach((dot, index) => {
+            dot.addEventListener('click', function() {
+                currentTestimonial = index;
+                showTestimonial(currentTestimonial);
+            });
+        });
+        
+        // Initialize Mapbox
+        mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+        
+        const map = new mapboxgl.Map({
+            container: 'travel-map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [0, 20],
+            zoom: 1.5
+        });
+        
+        // Add map controls
+        map.addControl(new mapboxgl.NavigationControl());
+        
+        // Zoom buttons functionality
+        document.querySelector('.map-zoom-in').addEventListener('click', function() {
+            map.zoomIn();
+        });
+        
+        document.querySelector('.map-zoom-out').addEventListener('click', function() {
+            map.zoomOut();
+        });
+        
+        // Sample destinations data
+        const destinations = [
+            {
+                id: 'santorini',
+                name: 'Santorini, Greece',
+                coordinates: [25.4615, 36.3932],
+                description: 'Famous for its stunning sunsets and white-washed buildings with blue domes.',
+                price: '$1,299+',
+                image: 'https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80',
+                category: 'europe'
+            },
+            {
+                id: 'kyoto',
+                name: 'Kyoto, Japan',
+                coordinates: [135.7681, 35.0116],
+                description: 'Known for its classical Buddhist temples, gardens, and traditional wooden houses.',
+                price: '$1,899+',
+                image: 'https://images.unsplash.com/photo-1538970272646-f61fabb3be8a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80',
+                category: 'asia'
+            },
+            {
+                id: 'machu-picchu',
+                name: 'Machu Picchu, Peru',
+                coordinates: [-72.5451, -13.1631],
+                description: 'An ancient Incan city set high in the Andes Mountains, renowned for its sophisticated dry-stone walls.',
+                price: '$1,599+',
+                image: 'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                category: 'america'
+            },
+            {
+                id: 'paris',
+                name: 'Paris, France',
+                coordinates: [2.3522, 48.8566],
+                description: 'The City of Light, famous for its art, fashion, gastronomy and culture.',
+                price: '$1,499+',
+                image: 'https://images.unsplash.com/photo-1431274172761-fca41d930114?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                category: 'europe'
+            },
+            {
+                id: 'new-york',
+                name: 'New York, USA',
+                coordinates: [-74.0060, 40.7128],
+                description: 'The city that never sleeps, with iconic landmarks like Times Square and Central Park.',
+                price: '$1,199+',
+                image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                category: 'america'
+            }
+        ];
+        
+        // Add markers to the map
+        destinations.forEach(destination => {
+            // Create a DOM element for the marker
+            const el = document.createElement('div');
+            el.className = 'marker';
+            el.style.backgroundImage = 'url(https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png)';
+            el.style.width = '30px';
+            el.style.height = '30px';
+            el.style.backgroundSize = 'cover';
+            el.style.cursor = 'pointer';
+            
+            // Add marker to map
+            new mapboxgl.Marker(el)
+                .setLngLat(destination.coordinates)
+                .setPopup(new mapboxgl.Popup({ offset: 25 })
+                    .setHTML(`
+                        <h3 class="font-bold text-lg">${destination.name}</h3>
+                        <p class="text-sm">${destination.description}</p>
+                        <p class="text-blue-600 font-bold mt-2">${destination.price}</p>
+                    `))
+                .addTo(map);
+            
+            // Add click event to show destination info
+            el.addEventListener('click', () => {
+                showDestinationInfo(destination);
+            });
+        });
+        
+        // Function to show destination info in the info container
+        function showDestinationInfo(destination) {
+            const container = document.getElementById('map-info-container');
+            container.innerHTML = `
+                <div class="col-span-3 bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up">
+                    <div class="md:flex">
+                        <div class="md:w-1/2">
+                            <img src="${destination.image}" alt="${destination.name}" class="w-full h-64 md:h-full object-cover">
+                        </div>
+                        <div class="p-6 md:w-1/2">
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">${destination.name}</h3>
+                            <p class="text-gray-600 mb-4">${destination.description}</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-blue-600 font-bold text-xl">${destination.price}</span>
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition btn-magnetic">
+                                    Book Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Initialize AOS for the new element
+            AOS.refresh();
+        }
+        
+        // Show first destination by default
+        if (destinations.length > 0) {
+            showDestinationInfo(destinations[0]);
+        }
+        
+        // Form Submission
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulate form submission
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
+            submitBtn.disabled = true;
+            
+            setTimeout(function() {
+                submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Message Sent!';
+                
+                setTimeout(function() {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 2000);
+            }, 1500);
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    gsap.to(window, {
+                        scrollTo: {
+                            y: targetElement,
+                            offsetY: 80
+                        },
+                        duration: 1,
+                        ease: 'power2.inOut'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
